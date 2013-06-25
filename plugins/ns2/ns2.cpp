@@ -38,8 +38,11 @@ static int fetch(float *avatar_pos, float *avatar_front, float *avatar_top, floa
 	unsigned int state;
 	bool ok;
 
-	/*BYTE *stateptr;
-	ok = peekProc((BYTE *) pModule+0x2A44680, state);
+	BYTE *stateptr;
+	BYTE *stateptr1;
+	ok = peekProc((BYTE *) getModuleAddr(L"Spark_Sound.dll") + 0x110D8, stateptr1) &&
+	     peekProc((BYTE *) stateptr1 + 0x0C, stateptr) &&
+	     peekProc((BYTE *) stateptr + 0x63FC, state);
 
 	if (! ok)
 		return false;
@@ -47,7 +50,7 @@ static int fetch(float *avatar_pos, float *avatar_front, float *avatar_top, floa
 	if (state == 0) {
 		context.clear();
 		return true; // This results in all vectors beeing zero which tells Mumble to ignore them.
-	}*/
+	}
 
 	// Create containers to stuff our raw data into, so we can convert it to Mumble's coordinate system
 	float pos_corrector[3];
@@ -110,17 +113,6 @@ static int fetch(float *avatar_pos, float *avatar_front, float *avatar_top, floa
 
 	BYTE ip [4];
 	peekProc(ipptr7, ip);
-
-	/*std::ostringstream debugss;
-	debugss << std::hex << (int)ipbase;
-	debugss << " -> " << (int)ipptr1;
-	debugss << " -> " << (int)ipptr2;
-	debugss << " -> " << (int)ipptr3;
-	debugss << " -> " << (int)ipptr4;
-	debugss << " -> " << (int)ipptr5;
-	debugss << " -> " << (int)ipptr6;
-	debugss << " -> " << (int)ipptr7;
-	OutputDebugStringA(debugss.str().c_str());*/
 
 	std::ostringstream contextss;
 	contextss << "{" << "\"ip\":\"" << std::dec;
