@@ -61,16 +61,17 @@ static int fetch(float *avatar_pos, float *avatar_front, float *avatar_top, floa
 	BYTE *baseptr;
 
 	ok = peekProc((BYTE *) pModule + 0x001391BC, baseptr0) &&
-	     peekProc((BYTE *) baseptr0 + 0xAC, baseptr1);
+	     peekProc((BYTE *) baseptr0 + 0x28, baseptr1) &&
+	     peekProc((BYTE *) baseptr1 + 0x4D8, baseptr2);
 	
 	if (! ok)
 		return false;
 
-	baseptr = baseptr1 + 0x5264;
+	baseptr = baseptr2 + 0x5264;
 
 	ok = peekProc((BYTE *) baseptr, pos_corrector) &&
 	     peekProc((BYTE *) baseptr + 0x24, top_corrector) &&
-		 peekProc((BYTE *) baseptr + 0x3C, front_corrector);
+	     peekProc((BYTE *) baseptr + 0x3C, front_corrector);
 
 	if (! ok)
 		return false;
@@ -97,21 +98,41 @@ static int fetch(float *avatar_pos, float *avatar_front, float *avatar_top, floa
 		camera_top[i] = avatar_top[i];
 	}
 
-	// Read continent name
-	/*BYTE *cbase = peekProc<BYTE *> ((BYTE *) pModule + 0x02A2E9D8);
-	BYTE *cptr1 = peekProc<BYTE *> ((BYTE *) cbase + 0x58);
-	BYTE *cptr2 = cptr1 + 0x40;
+	// Read ip address
+	BYTE *ipbase = peekProc<BYTE *> ((BYTE *) getModuleAddr(L"Spark_Core.dll") + 0x0058B1A8);
+	BYTE *ipptr1 = peekProc<BYTE *> ((BYTE *) ipbase + 0xA48);
+	BYTE *ipptr2 = peekProc<BYTE *> ((BYTE *) ipptr1);
+	BYTE *ipptr3 = peekProc<BYTE *> ((BYTE *) ipptr2 + 0x80);
+	BYTE *ipptr4 = peekProc<BYTE *> ((BYTE *) ipptr3 + 0x2D94);
+	BYTE *ipptr5 = peekProc<BYTE *> ((BYTE *) ipptr4 + 0x14);
+	BYTE *ipptr6 = peekProc<BYTE *> ((BYTE *) ipptr5);
+	BYTE *ipptr7 = ipptr6 + 0x40;
 
-	char continentname[8];
-	peekProc(cptr2, continentname);
-	continentname[sizeof(continentname)/sizeof(continentname[0]) - 1] = '\0';
+	BYTE ip [4];
+	peekProc(ipptr7, ip);
+
+	/*std::ostringstream debugss;
+	debugss << std::hex << (int)ipbase;
+	debugss << " -> " << (int)ipptr1;
+	debugss << " -> " << (int)ipptr2;
+	debugss << " -> " << (int)ipptr3;
+	debugss << " -> " << (int)ipptr4;
+	debugss << " -> " << (int)ipptr5;
+	debugss << " -> " << (int)ipptr6;
+	debugss << " -> " << (int)ipptr7;
+	OutputDebugStringA(debugss.str().c_str());*/
 
 	std::ostringstream contextss;
-	contextss << "{"
-		<< "\"continent\":\"" << continentname << "\""
-		<< "}";
+	contextss << "{" << "\"ip\":\"" << std::dec;
+	for (int i = 3; i >= 0; i--) {
+		contextss << (int)(ip[i]);
+		if (i > 0) {
+			contextss << ".";
+		}
+	}
+	contextss << "\"" << "}";
 
-	context = contextss.str();*/
+	context = contextss.str();
 
 	return true;
 }
