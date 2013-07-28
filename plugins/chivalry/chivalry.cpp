@@ -70,7 +70,7 @@ static int fetch(float *avatar_pos, float *avatar_front, float *avatar_top, floa
 	ok = peekProc((BYTE *) pModule+0x134CFC8, ipptr0) &&
 	     peekProc((BYTE *) ipptr0 + 0x651F8, ipptr1) &&
 	     peekProc((BYTE *) ipptr1 + 0x78, ipptr2) &&
-	     peekProc((BYTE *) ipptr2, ip); // Magical state value
+	     peekProc((BYTE *) ipptr2, ip);
 	if (! ok)
 		return false;
 
@@ -80,8 +80,10 @@ static int fetch(float *avatar_pos, float *avatar_front, float *avatar_top, floa
 	}
 
 	// Dereference pointer to player position
-	BYTE *posptr;
-	ok = peekProc((BYTE *) pModule + 0x01314838, posptr);
+	BYTE *posptr0;
+	BYTE *posptr1;
+	ok = peekProc((BYTE *) pModule + 0x1367860, posptr0) &&
+	     peekProc((BYTE *) posptr0 + 0x12C, posptr1);
 	if (! ok)
 		return false;
 
@@ -99,7 +101,7 @@ static int fetch(float *avatar_pos, float *avatar_front, float *avatar_top, floa
 	     peekProc((BYTE *) topptr, top_corrector[0]) &&
 	     peekProc((BYTE *) topptr+0x10, top_corrector[1]) &&
 	     peekProc((BYTE *) topptr+0x20, top_corrector[2]) &&
-	     peekProc((BYTE *) posptr+0x54, pos_corrector);
+	     peekProc((BYTE *) posptr1+0xA4, pos_corrector);
 
 	if (! ok)
 		return false;
