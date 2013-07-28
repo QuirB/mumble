@@ -41,6 +41,9 @@
       <Component Id="breach.dll">
         <File Source="$(var.SourceDir)\release\plugins\breach.dll" KeyPath="yes" />
       </Component>
+      <Component Id="chivalry.dll">
+        <File Source="$(var.SourceDir)\release\plugins\chivalry.dll" KeyPath="yes" />
+      </Component>
       <Component Id="cod2.dll">
         <File Source="$(var.SourceDir)\release\plugins\cod2.dll" KeyPath="yes" />
       </Component>
@@ -146,6 +149,7 @@
       <ComponentRef Id="borderlands2.dll" />
       <ComponentRef Id="blacklight.dll" />
       <ComponentRef Id="breach.dll" />
+      <ComponentRef Id="chivalry.dll" />
       <ComponentRef Id="cod2.dll" />
       <ComponentRef Id="cod4.dll" />
       <ComponentRef Id="cod5.dll" />
